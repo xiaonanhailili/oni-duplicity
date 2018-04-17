@@ -25,6 +25,8 @@ import AppNavMenu from "../AppNavMenu";
 import NoSaveLoadedPage from "../../pages/NoSaveLoaded";
 import LoadingSaveFilePage from "../../pages/LoadingSaveFile";
 import SaveEditorPage from "../../pages/SaveEditor";
+
+import MaterialsPage from "../../pages/Materials";
 import ChangelogPage from "../../pages/Changelog";
 import ErrorPage from "../../pages/Error";
 import Error404Page from "../../pages/404";
@@ -49,7 +51,8 @@ class AppComponent extends React.Component<OwnProps> {
 
         // TODO: Load from somewhere
         let navMenuEntries: NavMenuEntry[] = [];
-        
+
+        // TODO: Move this stack of display logic into editor component.
         if (loadError) {
             // Show error screen
             rootComponent = ErrorPage;
@@ -69,31 +72,75 @@ class AppComponent extends React.Component<OwnProps> {
             requireExactPath = false;
             navMenuEntries = [
                 {
-                    path: "/editor/duplicants",
-                    name: "Duplicants"
+                    // Save Editor items
+                    type: "group",
+                    entries: [
+                        {
+                            type: "link",
+                            path: "/editor/duplicants",
+                            name: "Duplicants"
+                        }
+                    ]
                 }
             ];
         }
 
+        navMenuEntries.push(
+            {
+                // Utility items
+                type: "group",
+                entries: [
+                    {
+                        type: "link",
+                        path: "/material-explorer",
+                        name: "Material Explorer",
+                        subEntries: [
+                            {
+                                type: "link",
+                                path: "/material-explorer/solids",
+                                name: "Solids"
+                            },
+                            {
+                                type: "link",
+                                path: "/material-explorer/liquids",
+                                name: "Liquids"
+                            },
+                            {
+                                type: "link",
+                                path: "/material-explorer/gasses",
+                                name: "Gasses"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                type: "link",
+                path: "/changelog",
+                name: "Duplicity Changelog"
+            }
+        );
+
         return (
             <div className="ui-app-root pt-app pt-dark fill-parent layout-vertical">
-                <AppNavBar className="layout-item"/>
+                <AppNavBar className="layout-item" />
                 <div className="layout-item-fill layout-horizontal">
                     <AppNavMenu className="layout-item" entries={navMenuEntries} />
                     <div className="layout-item-fill">
                         <Switch>
-                            <Route exact={requireExactPath} path="/editor" component={rootComponent}/>
-                            <Route exact path="/404" component={Error404Page}/>
+                            <Route exact={requireExactPath} path="/editor" component={rootComponent} />
+                            <Route exact path="/404" component={Error404Page} />
+                            <Route path="/material-explorer" component={MaterialsPage} />
                             <Route exact path="/changelog" component={ChangelogPage} />
-                            <Redirect exact from="/" to="/editor"/>
-                            { redirectOn404 ? <Redirect to={redirectOn404}/> : <Route component={Error404Page}/> }
+                            <Redirect exact from="/" to="/editor" />
+                            {redirectOn404 ? <Redirect to={redirectOn404} /> : <Route component={Error404Page} />}
                         </Switch>
                     </div>
                 </div>
                 <Dialog isOpen={isSaveSaving} title="Saving File" icon={IconNames.SAVED} isCloseButtonShown={false}>
                     <NonIdealState>
                         <div>
-                            <Spinner large={true}/>
+                            <Spinner large={true} />
                         </div>
                         <div>
                             Saving <code>{saveFileName}</code>
