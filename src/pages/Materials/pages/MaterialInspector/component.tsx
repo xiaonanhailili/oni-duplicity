@@ -80,28 +80,21 @@ export default class MaterialInspector extends React.Component<MaterialInspector
         const element = this.state.element;
         if (!element) return <div>Element Not Found</div>;
 
-        let squareContents: React.ReactChild[] = [];
-        switch (element.type) {
-            case "solid": {
-                squareContents.push(
-                    <div key="heat" className="layout-horizontal">
-                        <div style={style_element_specificHeat}>{element.specificHeatCapacity}</div>
-                        <div style={style_element_surfaceArea}>{element.solidSurfaceAreaMultiplier} / {element.liquidSurfaceAreaMultiplier} / {element.gasSurfaceAreaMultiplier}</div>
-                        <div style={style_element_thermalConductivity}>{element.thermalConductivity}</div>
-                    </div>,
-                    <div key="top" className="layout-item-fill" />,
-                    <h4 key="name" className="layout-item" style={style_element_name}>{element.name}</h4>,
-                    <div key="type" style={style_element_type}>{element.type}</div>,
-                    <div key="tags" style={style_element_tags}>{element.tags.join(", ")}</div>,
-                    <div key="bottom" className="layout-item-fill" />,
-                    <div key="weight" style={style_element_mass}>{element.molarMass}</div>
-                );
-            }
-        }
-
         return (
             <div style={style_element_square} className="layout-vertical">
-                {squareContents}
+                <div className="layout-horizontal">
+                    <div style={style_element_specificHeat}>{element.specificHeatCapacity}</div>
+                    <div className="layout-item-fill" />
+                    <div style={style_element_surfaceArea}>{element.solidSurfaceAreaMultiplier} / {element.liquidSurfaceAreaMultiplier} / {element.gasSurfaceAreaMultiplier}</div>
+                    <div className="layout-item-fill" />
+                    <div style={style_element_thermalConductivity}>{element.thermalConductivity}</div>
+                </div>
+                <div className="layout-item-fill" />
+                <h4 className="layout-item" style={style_element_name}>{element.name}</h4>
+                <div style={style_element_type}>{element.type}</div>
+                <div style={style_element_tags}>{element.tags.join(", ")}</div>
+                <div className="layout-item-fill" />
+                <div style={style_element_mass}>{element.molarMass}</div>
             </div>
         );
     }
