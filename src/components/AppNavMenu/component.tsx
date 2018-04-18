@@ -53,13 +53,13 @@ class AppNavMenu extends React.Component<AppNavMenuProps & RouteComponentProps<a
         return fragments;
     }
 
-    private _renderEntry(entry: NavMenuEntry, key?: any): React.ReactChild | React.ReactChild[] {
+    private _renderEntry(entry: NavMenuEntry, key: any): React.ReactChild | React.ReactChild[] {
         switch(entry.type) {
             case "group": {
                 const rendered = this._renderEntries(entry.entries, key);
                 if (entry.name) {
                     rendered.unshift(
-                        <div className="pt-menu-header"><h6>{entry.name}</h6></div>
+                        <div key={`${key}-header`} className="pt-menu-header"><h6>{entry.name}</h6></div>
                     );
                 }
                 return rendered;
@@ -79,7 +79,7 @@ class AppNavMenu extends React.Component<AppNavMenuProps & RouteComponentProps<a
                     return [
                         primaryLink,
                         <ul>
-                            {this._renderEntries(subEntries, key).map((x, i) => <li key={i}>{x}</li>)}
+                            {this._renderEntries(subEntries).map((x, i) => <li key={`${key}-${i}`}>{x}</li>)}
                         </ul>
                     ];
                 }
