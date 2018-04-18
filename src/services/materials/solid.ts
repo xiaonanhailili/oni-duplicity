@@ -1,5 +1,9 @@
 
 import {
+    Element
+} from "./interfaces";
+
+import {
     ElementParser,
     parseCsv,
     parseElement
@@ -19,22 +23,12 @@ export interface SolidElement extends Element {
     hardness: number;
     hardnessTier: any;
 
-    defaultTemperature: number;
-    specificHeatCapacity: number;
-    thermalConductivity: number;
-
-    solidSurfaceAreaMultiplier: number;
-    liquidSurfaceAreaMultiplier: number;
-    gasSurfaceAreaMultiplier: number;
-
     electricalConductivity: number;
 
     highTemp: number;
     highTempTransitionTarget: number;
 
     sublimateId: string;
-    sublimateEmitDistasnce: number;
-    sublimateEmitIntensity: number;
 }
 
 /*
@@ -62,8 +56,9 @@ export interface SolidElement extends Element {
 21: Tags,
 22: Notes
 */
-const SOLID_FIELDS: ElementParser = {
+const SOLID_FIELD_PARSER: ElementParser<SolidElement> = {
     name: 0,
+    type: "solid",
     category: 20,
     tags: [21, x => (x || "").split("|").map(x => x.trim()).filter(x => x != "")],
     molarMass: [17, Number],
@@ -86,10 +81,11 @@ const SOLID_FIELDS: ElementParser = {
     electricalConductivity: [6, Number],
 
     highTemp: [8, Number],
-    highTempTransitionTarget: [9, Number],
+    highTempTransitionTarget: 9,
 
-    sublimateId: [10, Number],
-    sublimateEmitDistasnce: [18, Number],
-    sublimateEmitIntensity: [19, Number]
+    sublimateId: 10,
+    lightEmitDistasnce: [18, Number],
+    lightEmitIntensity: [19, Number]
 };
-export const SOLID = SOLID_DATATABLE.rows.map(x => parseElement(x, SOLID_FIELDS));
+export const SOLIDS = SOLID_DATATABLE.rows.map(x => parseElement(x, SOLID_FIELD_PARSER));
+export const SOLID_FIELDS: (keyof SolidElement)[] = Object.keys(SOLID_FIELD_PARSER) as any;

@@ -4,12 +4,18 @@ import { Route, Redirect } from "react-router";
 import { Switch } from "react-router-dom";
 
 import {
-    SOLID_DATATABLE,
-    LIQUID_DATATABLE,
-    GAS_DATATABLE
+    SolidElement,
+    LiquidElement,
+    GasElement,
+    SOLIDS,
+    SOLID_FIELDS,
+    LIQUIDS,
+    LIQUID_FIELDS,
+    GASSES,
+    GAS_FIELDS
 } from "@/services/materials";
 
-import RawDataTable from "./components/RawDataTable";
+import DataTable from "./components/DataTable";
 
 export default class MaterialsPage extends React.Component {
     render() {
@@ -17,24 +23,26 @@ export default class MaterialsPage extends React.Component {
             <div className="ui-page ui-page-materials fill-parent container-scroll">
                 <Switch>
                     <Redirect exact path="/material-explorer" to="/material-explorer/solids" />
-                    <Route exact path="/material-explorer/solids" component={SolidRawDataTable} />
-                    <Route exact path="/material-explorer/liquids" component={LiquidRawDataTable} />
-                    <Route exact path="/material-explorer/gasses" component={GasRawDataTable} />
+                    <Route exact path="/material-explorer/solids" component={SolidDataTable} />
+                    <Route exact path="/material-explorer/liquids" component={LiquidDataTable} />
+                    <Route exact path="/material-explorer/gasses" component={GasDataTable} />
                 </Switch>
             </div>
         );
     }
 }
 
-const SolidRawDataTable = () => (
-    <RawDataTable className="fill-parent" dataTable={SOLID_DATATABLE}/>
+class SolidDataTableComponent extends DataTable<SolidElement> {};
+const SolidDataTable = () => (
+    <SolidDataTableComponent className="fill-parent" elements={SOLIDS} fields={SOLID_FIELDS}/>
 );
 
-const LiquidRawDataTable = () => (
-    <RawDataTable className="fill-parent" dataTable={LIQUID_DATATABLE}/>
+class LiquidDataTableComponent extends DataTable<LiquidElement> {};
+const LiquidDataTable = () => (
+    <LiquidDataTableComponent className="fill-parent" elements={LIQUIDS} fields={LIQUID_FIELDS}/>
 );
 
-const GasRawDataTable = () => (
-    <RawDataTable className="fill-parent" dataTable={GAS_DATATABLE}/>
+class GasDataTableComponent extends DataTable<GasElement> {};
+const GasDataTable = () => (
+    <GasDataTableComponent className="fill-parent" elements={GASSES} fields={GAS_FIELDS}/>
 );
-
