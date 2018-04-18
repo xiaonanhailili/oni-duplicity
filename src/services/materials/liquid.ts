@@ -68,19 +68,19 @@ const LIQUID_FIELD_PARSER: ElementParser<LiquidElement> = {
     electricalConductivity: [11, Number],
 
     lowTemp: [12, Number],
-    lowTempTransition: 14,
+    lowTempTransition: [14, x => x != "" ? x : null],
 
     highTemp: [13, Number],
-    highTempTransition: 15,
-    highTempTransitionOre: 19,
+    highTempTransition: [15, x => x != "" ? x : null],
+    highTempTransitionOre: [19, x => x != "" ? x : null],
     highTempTransitionOreMassFactor: [20, Number],
 
-    sublimateId: 16,
+    sublimateId: [16, x => x != "" ? x : null],
 
     lightEmitDistasnce: [24, Number],
     lightEmitIntensity: [25, Number],
 
-    convertId: 18,
+    convertId: [18, x => x != "" ? x : null],
 
     toxicity: [26, Number],
 };

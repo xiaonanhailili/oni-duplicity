@@ -78,7 +78,9 @@ class AppNavMenu extends React.Component<AppNavMenuProps & RouteComponentProps<a
                 else {
                     return [
                         primaryLink,
-                        ...this._renderEntries(subEntries, key)
+                        <ul>
+                            {this._renderEntries(subEntries, key).map((x, i) => <li key={i}>{x}</li>)}
+                        </ul>
                     ];
                 }
             }

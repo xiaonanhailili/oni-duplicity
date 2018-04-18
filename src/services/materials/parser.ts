@@ -5,7 +5,7 @@ export type ElementParseEntry = number | [number, ((value: string) => any)] | st
 export type ElementParser<TElement extends Element> = {
     [P in keyof TElement]: ElementParseEntry;
 }
-export function parseElement<TElement extends Element>(rows: string[], parser: ElementParser<TElement>): any {
+export function parseElement<TElement extends Element>(rows: string[], parser: ElementParser<TElement>): TElement {
     
     const element: any = {};
     for (let key of Object.keys(parser) as (keyof ElementParser<TElement>)[]) {

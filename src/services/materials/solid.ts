@@ -81,9 +81,9 @@ const SOLID_FIELD_PARSER: ElementParser<SolidElement> = {
     electricalConductivity: [6, Number],
 
     highTemp: [8, Number],
-    highTempTransitionTarget: 9,
+    highTempTransitionTarget: [9, x => x != "" ? x : null],
 
-    sublimateId: 10,
+    sublimateId: [10, x => x != "" ? x : null],
     lightEmitDistasnce: [18, Number],
     lightEmitIntensity: [19, Number]
 };

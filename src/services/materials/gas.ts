@@ -47,7 +47,7 @@ const GAS_FIELD_PARSER: ElementParser<GasElement> = {
     defaultPressure: [10, Number],
 
     lowTemp: [7, Number],
-    lowTempTransition: 8,
+    lowTempTransition: [8, x => x != "" ? x : null],
 
     lightEmitDistasnce: [12, Number],
     lightEmitIntensity: [13, Number],

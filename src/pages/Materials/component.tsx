@@ -16,6 +16,7 @@ import {
 } from "@/services/materials";
 
 import DataTable from "./components/DataTable";
+import MaterialInspector from "./pages/MaterialInspector";
 
 export default class MaterialsPage extends React.Component {
     render() {
@@ -23,6 +24,8 @@ export default class MaterialsPage extends React.Component {
             <div className="ui-page ui-page-materials fill-parent container-scroll">
                 <Switch>
                     <Redirect exact path="/material-explorer" to="/material-explorer/solids" />
+                    <Redirect exact path="/material-explorer/material" to="/material-explorer/solids" />
+                    <Route exact path="/material-explorer/material/:material" component={MaterialInspector}/>
                     <Route exact path="/material-explorer/solids" component={SolidDataTable} />
                     <Route exact path="/material-explorer/liquids" component={LiquidDataTable} />
                     <Route exact path="/material-explorer/gasses" component={GasDataTable} />

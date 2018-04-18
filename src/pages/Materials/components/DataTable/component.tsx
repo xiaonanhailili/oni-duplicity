@@ -2,6 +2,7 @@
 import * as React from "react"
 
 import { Element } from "@/services/materials";
+import { Link } from "react-router-dom";
 
 export interface RawDataTableProps<TElementType extends Element> {
     className?: string;
@@ -36,7 +37,7 @@ export default class DataTable<TElementType extends Element> extends React.Compo
         ));
         const rows = elements.map((x, i) => (
             <tr key={i}>
-                {targetFields.map((field, ri) => <td key={ri}>{String(x[field])}</td>)}
+                {targetFields.map((field, ri) => <td key={ri}>{this._renderFieldValue(field, x[field])}</td>)}
             </tr>
         ));
 
@@ -54,5 +55,12 @@ export default class DataTable<TElementType extends Element> extends React.Compo
                 </table>
             </div>
         );
+    }
+
+    private _renderFieldValue(fieldName: string, value: any): React.ReactFragment {
+        if (fieldName === "name") {
+            return <Link to={`/material-explorer/material/${value}`}>{value}</Link>
+        }
+        return String(value);
     }
 }
