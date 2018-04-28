@@ -43,7 +43,7 @@ export interface SitePath extends Optional<NavMenuItem> {
  * A group of related items.  The items will be rendered
  * by the first non-group ancestor.
  */
-export interface NavGroup extends NavMenuItem {
+export interface NavGroup extends Optional<NavMenuItem> {
     type: "group";
     children: SiteGraphEntry[];
 }

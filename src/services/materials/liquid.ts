@@ -77,7 +77,7 @@ const LIQUID_FIELD_PARSER: ElementParser<LiquidElement> = {
 
     sublimateId: [16, x => x != "" ? x : null],
 
-    lightEmitDistasnce: [24, Number],
+    lightEmitDistance: [24, Number],
     lightEmitIntensity: [25, Number],
 
     convertId: [18, x => x != "" ? x : null],

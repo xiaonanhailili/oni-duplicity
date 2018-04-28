@@ -18,3 +18,5 @@ declare module "raw-loader!*" {
     const data: string;
     export = data;
 }
+
+declare type ArrayItemType<T> = T extends (infer Y)[] ? Y : never;

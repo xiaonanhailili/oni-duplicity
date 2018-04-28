@@ -1,0 +1,12 @@
+
+.ui-page-materials-browser {
+    .ui-material-browser-toolbox {
+        float: right;
+    }
+
+    .ui-element-column-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center
+    }
+}

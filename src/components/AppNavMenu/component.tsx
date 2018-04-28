@@ -59,12 +59,17 @@ class AppNavMenu extends React.Component<AppNavMenuProps & RouteComponentProps<a
         return fragments;
     }
 
-    private _renderEntry(entry: SiteGraphEntry, key: any): React.ReactChild | React.ReactChild[] {
+    private _renderEntry(entry: SiteGraphEntry, key: any): React.ReactChild | React.ReactChild[] | null {
         switch(entry.type) {
             case "path":
             case "group": {
+                // Groups implicitly have a nav menu by default, since
+                //  they have no effect without one.
+                const navMenu = entry.navMenu !== undefined ? entry.navMenu : (entry.type === "group");
+                if (!navMenu) return null;
+
                 const rendered = this._renderLinks(entry.children, key);
-                const menuName = entry.navMenu && (entry.navMenu === "string" && entry.navMenu) || entry.name;
+                const menuName = navMenu && (navMenu === "string" && navMenu) || entry.name;
                 if (menuName && menuName !== "") {
                     rendered.unshift(
                         <div key={`${key}-header`} className="pt-menu-header"><h6>{menuName}</h6></div>
@@ -78,8 +83,10 @@ class AppNavMenu extends React.Component<AppNavMenuProps & RouteComponentProps<a
                     name,
                     path,
                     children,
+                    navMenu,
                     navMenuCollapse
                 } = entry;
+                if (!navMenu) return null;
                 const primaryLink = <ActiveAwareLink key={key} exact={children != null} className="pt-menu-item" to={path}>{name}</ActiveAwareLink>;
                 if (!children || (navMenuCollapse && !matchPartialPath(pathName, path))) {
                     return primaryLink;

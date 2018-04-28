@@ -84,7 +84,7 @@ const SOLID_FIELD_PARSER: ElementParser<SolidElement> = {
     highTempTransitionTarget: [9, x => x != "" ? x : null],
 
     sublimateId: [10, x => x != "" ? x : null],
-    lightEmitDistasnce: [18, Number],
+    lightEmitDistance: [18, Number],
     lightEmitIntensity: [19, Number]
 };
 export const SOLIDS = SOLID_DATATABLE.rows.map(x => parseElement(x, SOLID_FIELD_PARSER));

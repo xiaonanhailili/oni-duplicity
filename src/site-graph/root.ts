@@ -3,6 +3,7 @@ import { SitePage } from "@/site-graph";
 
 import App from "../components/App";
 import SaveEditor, { pageGraph as saveEditorPages } from "../pages/SaveEditor";
+import Materials, { pageGraph as materialsPages } from "../pages/Materials";
 import ChangeLog from "../pages/Changelog";
 
 const siteGraph: SitePage = {
@@ -15,15 +16,29 @@ const siteGraph: SitePage = {
             // Save Editor
             type: "page",
             path: "/editor",
-            name: "Save Editor",
             component: SaveEditor,
-            navMenuCollapse: true,
+            name: "Save Editor",
+            navMenu: true,
             children: saveEditorPages
+        },
+        {
+            type: "group",
+            children: [
+                {
+                    type: "page",
+                    path: "/material-explorer",
+                    component: Materials,
+                    name: "Materials Explorer",
+                    navMenu: true,
+                    children: materialsPages
+                }
+            ]
         },
         {
             type: "page",
             path: "/changelog",
             name: "Duplicity Changelog",
+            navMenu: true,
             component: ChangeLog
         }
     ]
