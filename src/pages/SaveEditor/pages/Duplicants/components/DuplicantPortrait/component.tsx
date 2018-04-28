@@ -1,44 +1,52 @@
 
 import * as React from "react";
-import { connect } from "react-redux";
+import { observer } from "mobx-react";
 
-import { GameObject } from "oni-save-parser";
+import { GameObjectModel } from "@/services/save-editor";
 
 import { Card } from "@blueprintjs/core";
 import { autobind } from "core-decorators";
 
-import { error, FAILURE_TYPE } from "../../../../../../logging";
+import { error, FAILURE_TYPE } from "@/logging";
+import { MinionIdentityBehavior, MinionResumeBehavior } from "oni-save-parser";
+
+import "./style.scss";
 
 
+export interface DuplicantPortraitProps {
+    className?: string;
+    duplicant: GameObjectModel;
+    onClick?(duplicant: GameObjectModel): void;
+}
 
-import DuplicantPortraitProps from "./props";
-import mapStateToProps, { StateProps } from "./selectors";
 
-
-type Props = DuplicantPortraitProps & StateProps;
+type Props = DuplicantPortraitProps;
+@observer
 class DuplicantPortrait extends React.Component<Props> {
     render() {
         const {
             className,
-            identityBehavior,
-            resumeBehavior
+            duplicant
         } = this.props;
+
+        const identity = duplicant.getBehavior(MinionIdentityBehavior);
+        const resume = duplicant.getBehavior(MinionResumeBehavior);
 
         let outerClassName = `ui-duplicant-portrait ${className}`;
 
         let name: string;
         let role: string;
 
-        if (identityBehavior) {
-            name = identityBehavior.parsedData.name;
+        if (identity) {
+            name = identity.templateData.name;
         }
         else {
             error("Duplicant not found or identity behavior missing.", FAILURE_TYPE.MISSING_BEHAVIOR);
             name = "[IDENTITY MISSING]";
         }
 
-        if (resumeBehavior) {
-            role = resumeBehavior.parsedData.currentRole
+        if (resume && resume.templateData.currentRole) {
+            role = resume.templateData.currentRole;
         }
         else {
             error("resume behavior missing.", FAILURE_TYPE.MISSING_BEHAVIOR);
@@ -57,10 +65,10 @@ class DuplicantPortrait extends React.Component<Props> {
     @autobind()
     private _onClick() {
         const {
-            duplicantID,
+            duplicant,
             onClick
         } = this.props;
-        if (onClick) onClick(duplicantID);
+        if (onClick) onClick(duplicant);
     }
 }
-export default connect(mapStateToProps)(DuplicantPortrait);
+export default DuplicantPortrait;

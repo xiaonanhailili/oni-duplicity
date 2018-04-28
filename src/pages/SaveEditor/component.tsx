@@ -1,6 +1,6 @@
 
 import * as React from "react";
-import { RouteComponentProps, Switch, Route, Redirect, withRouter } from "react-router";
+import { observer } from "mobx-react";
 
 import {
     Card,
@@ -9,23 +9,45 @@ import {
     MenuDivider
 } from "@blueprintjs/core";
 
-import ActiveAwareLink from "../../components/ActiveAwareLink";
+import { withSaveEditor, SaveEditorProps } from "@/services/save-editor";
 
-import DuplicantsPage from "./pages/Duplicants";
-import Error404Page from "../404";
+import NoSaveLoadedPage from "./components/NoSaveLoaded";
+import LoadingSaveFilePage from "./components/LoadingSaveFile";
 
-class SaveEditorPageComponent extends React.Component {
+
+import ErrorPage from "../Error";
+
+type Props = SaveEditorProps;
+@observer
+class SaveEditorPageComponent extends React.Component<Props> {
     render() {
+        const {
+            saveEditor: {
+                loadError,
+                isSaveLoading,
+                isSaveLoaded
+            },
+            children
+        } = this.props;
+
+        let rootComponent: React.ReactChild;
+
+        if (loadError) {
+            // Show error screen
+            return <ErrorPage error={loadError} />;
+        }
+        else if (isSaveLoading) {
+            return <LoadingSaveFilePage />;
+        }
+        else if (!isSaveLoaded) {
+            return <NoSaveLoadedPage />
+        }
+
         return (
             <div className="ui-page ui-page-saveeditor fill-parent">
-                <Switch>
-                    <Redirect exact from="/editor" to="/editor/duplicants" />
-                    <Route exact path="/editor/duplicants" component={DuplicantsPage} />
-                    <Route component={Error404Page}/>
-                </Switch>
+                {children}
             </div>
         )
     }
 }
-
-export default SaveEditorPageComponent;
+export default withSaveEditor(SaveEditorPageComponent);

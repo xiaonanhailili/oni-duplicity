@@ -1,156 +1,59 @@
 
 import * as React from "react";
-import { connect } from "react-redux";
-import { Route, Redirect, Switch, withRouter } from "react-router";
-import { autobind } from "core-decorators";
+import { observer } from "mobx-react";
+import { Route, Redirect, Switch, RouteComponentProps, withRouter } from "react-router";
 
 import {
-    Navbar,
-    NavbarGroup,
-    NavbarHeading,
-    Text,
     Dialog,
-    Button,
-    Alignment,
     Spinner,
     NonIdealState
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 
-import mapStateToProps, { StateProps } from "./selectors";
+import DevTools from "mobx-react-devtools";
+
+import { SaveEditorProps, withSaveEditor } from "@/services/save-editor";
+
+import SiteSwitch from "@/site-graph/components/SiteSwitch";
+import siteRoot from "@/site-graph/root";
 
 import AppNavBar from "../AppNavBar";
 import AppNavMenu from "../AppNavMenu";
+import SavingDialog from "../SavingDialog";
 
-import NoSaveLoadedPage from "../../pages/NoSaveLoaded";
-import LoadingSaveFilePage from "../../pages/LoadingSaveFile";
-import SaveEditorPage from "../../pages/SaveEditor";
 
-import MaterialsPage from "../../pages/Materials";
-import ChangelogPage from "../../pages/Changelog";
-import ErrorPage from "../../pages/Error";
-import Error404Page from "../../pages/404";
-import { NavMenuEntry } from "../AppNavMenu/interfaces";
-
-type OwnProps = StateProps;
-class AppComponent extends React.Component<OwnProps> {
+type Props = SaveEditorProps & RouteComponentProps<any>;
+@observer
+class AppComponent extends React.Component<Props> {
     private _input: HTMLInputElement | null = null;
 
     render() {
         const {
-            saveFileName,
-            isSaveChosen,
-            isSaveLoading,
-            isSaveSaving,
-            loadError
-        } = this.props;
-
-        let rootComponent: React.ComponentType;
-        let requireExactPath = true;
-        let redirectOn404: string | null = null;
-
-        // TODO: Load from somewhere
-        let navMenuEntries: NavMenuEntry[] = [];
-
-        // TODO: Move this stack of display logic into editor component.
-        if (loadError) {
-            // Show error screen
-            rootComponent = ErrorPage;
-        }
-        else if (!isSaveChosen) {
-            // Show file chooser.
-            rootComponent = NoSaveLoadedPage
-            redirectOn404 = "/editor";
-        }
-        else if (isSaveLoading) {
-            // Show loading screen.
-            rootComponent = LoadingSaveFilePage;
-        }
-        else {
-            // Show editor
-            rootComponent = SaveEditorPage;
-            requireExactPath = false;
-            navMenuEntries = [
-                {
-                    // Save Editor items
-                    type: "group",
-                    entries: [
-                        {
-                            type: "link",
-                            path: "/editor/duplicants",
-                            name: "Duplicants"
-                        }
-                    ]
-                }
-            ];
-        }
-
-        navMenuEntries.push(
-            {
-                // Utility items
-                type: "group",
-                entries: [
-                    {
-                        type: "link",
-                        path: "/material-explorer",
-                        name: "Material Explorer",
-                        subEntries: [
-                            {
-                                type: "link",
-                                path: "/material-explorer/solids",
-                                name: "Solids"
-                            },
-                            {
-                                type: "link",
-                                path: "/material-explorer/liquids",
-                                name: "Liquids"
-                            },
-                            {
-                                type: "link",
-                                path: "/material-explorer/gasses",
-                                name: "Gasses"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                type: "link",
-                path: "/changelog",
-                name: "Duplicity Changelog"
+            saveEditor: {
+                isSaveSaving,
+                saveName
             }
-        );
+        } = this.props;
 
         return (
             <div className="ui-app-root pt-app pt-dark fill-parent layout-vertical">
                 <AppNavBar className="layout-item" />
                 <div className="layout-item-fill layout-horizontal">
-                    <AppNavMenu className="layout-item" entries={navMenuEntries} />
+                    <AppNavMenu className="layout-item" siteGraph={siteRoot.children!} />
                     <div className="layout-item-fill">
-                        <Switch>
-                            <Route exact={requireExactPath} path="/editor" component={rootComponent} />
-                            <Route exact path="/404" component={Error404Page} />
-                            <Route path="/material-explorer" component={MaterialsPage} />
-                            <Route exact path="/changelog" component={ChangelogPage} />
+                        <SiteSwitch siteGraph={siteRoot.children!}>
+                            { /* TODO: Use an index path concept for site graph. */}
                             <Redirect exact from="/" to="/editor" />
-                            {redirectOn404 ? <Redirect to={redirectOn404} /> : <Route component={Error404Page} />}
-                        </Switch>
+                        </SiteSwitch>
                     </div>
+                    {process.env.NODE_ENV === "development" ? <DevTools /> : undefined}
                 </div>
                 <Dialog isOpen={isSaveSaving} title="Saving File" icon={IconNames.SAVED} isCloseButtonShown={false}>
-                    <NonIdealState>
-                        <div>
-                            <Spinner large={true} />
-                        </div>
-                        <div>
-                            Saving <code>{saveFileName}</code>
-                        </div>
-                    </NonIdealState>
+                    <SavingDialog />
                 </Dialog>
             </div>
         );
     }
-
-
 }
-export default connect(mapStateToProps)(AppComponent);
+// Need withRouter to force update.  Yes, we need one on either side of ../App.tsx
+export default withRouter(withSaveEditor(AppComponent));

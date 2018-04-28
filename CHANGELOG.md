@@ -1,5 +1,23 @@
+
+### v1.4.0
+- Edit duplicant
+    - Interests (aptitudes)
+- Edit geysers
+    - Type
+    - Cycle time factor
+    - Active time factor
+    - Dormant time factor
+- Ability to rename file on download.
+
+### v1.3.0
+- Edit current cycle.
+- Edit duplicant printer
+    - Next duplicant ready
+    - Time to next duplicant
+
 ### v1.2.1
 - Fix save corruption when text with multi-byte accents are encountered.
+- Refactor URL layout to make way for future utilities.
 
 ### v1.2.0
 

@@ -1,6 +1,5 @@
 
 import * as React from "react";
-import { connect } from "react-redux";
 
 import {
     NonIdealState,
@@ -8,30 +7,30 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 
-import mapStateToProps, { StateProps } from "./selectors";
-import mapDispatchToProps, { DispatchProps } from "./dispatch";
 
-
-type Props = StateProps & DispatchProps;
-class ErrorPageComponent extends React.Component<Props> {
+export interface ErrorPageProps {
+    error: Error;
+}
+type Props = ErrorPageProps;
+class ErrorPage extends React.Component<Props> {
     render() {
         let {
-            loadError
+            error
         } = this.props;
 
-        if (!loadError) {
-            loadError = new Error("Well, this is weird... The Error page loaded, but there is no error.");
-            loadError.stack = "I really don't know what to do about this..."
+        if (!error) {
+            error = new Error("Well, this is weird... The Error page loaded, but there is no error.");
+            error.stack = "I really don't know what to do about this..."
         }
 
         return (
             <NonIdealState visual={IconNames.ERROR} description="An Error Occurred">
-                <Text>{loadError.message}</Text>
+                <Text>{error.message}</Text>
                 <div>
-                    <code>{loadError.stack}</code>
+                    <code>{error.stack}</code>
                 </div>
             </NonIdealState>
         );
     }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(ErrorPageComponent);
+export default ErrorPage;

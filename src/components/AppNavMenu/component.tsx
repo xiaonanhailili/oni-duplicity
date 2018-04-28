@@ -1,5 +1,6 @@
 
 import * as React from "react";
+import { autobind } from "core-decorators";
 import { RouteComponentProps, withRouter } from "react-router";
 
 import {
@@ -8,18 +9,23 @@ import {
 
 import ActiveAwareLink from "../ActiveAwareLink";
 
-import { AppNavMenuProps } from "./props";
-import { NavMenuEntry } from "./interfaces";
-import { autobind } from "core-decorators";
+import { SiteGraph, SiteGraphEntry } from "@/site-graph";
+
+import "./style.scss";
+
+export interface AppNavMenuProps {
+    className?: string;
+    siteGraph: SiteGraph;
+}
 
 class AppNavMenu extends React.Component<AppNavMenuProps & RouteComponentProps<any>> {
     render() {
         const {
             className,
-            entries
+            siteGraph
         } = this.props;
 
-        const links = this._renderEntries(entries);
+        const links = this._renderLinks(siteGraph);
         return (
             <div className={`ui-nav-menu ${className || ""}`}>
                 {links}
@@ -27,7 +33,7 @@ class AppNavMenu extends React.Component<AppNavMenuProps & RouteComponentProps<a
         );
     }
 
-    private _renderEntries(entries: NavMenuEntry[], key?: any): React.ReactChild[] {
+    private _renderLinks(entries: SiteGraph, key?: any): React.ReactChild[] {
         key = key ? String(key) + "-" : "";
 
         const fragments: React.ReactChild[] = [];
@@ -43,7 +49,7 @@ class AppNavMenu extends React.Component<AppNavMenuProps & RouteComponentProps<a
 
             if (Array.isArray(rendered)) {
                 fragments.push(...rendered);
-                previousWasGroup = true;
+                previousWasGroup = rendered.length > 0;
             }
             else {
                 fragments.push(rendered);
@@ -53,46 +59,49 @@ class AppNavMenu extends React.Component<AppNavMenuProps & RouteComponentProps<a
         return fragments;
     }
 
-    private _renderEntry(entry: NavMenuEntry, key: any): React.ReactChild | React.ReactChild[] {
+    private _renderEntry(entry: SiteGraphEntry, key: any): React.ReactChild | React.ReactChild[] {
         switch(entry.type) {
+            case "path":
             case "group": {
-                const rendered = this._renderEntries(entry.entries, key);
-                if (entry.name) {
+                const rendered = this._renderLinks(entry.children, key);
+                const menuName = entry.navMenu && (entry.navMenu === "string" && entry.navMenu) || entry.name;
+                if (menuName && menuName !== "") {
                     rendered.unshift(
-                        <div key={`${key}-header`} className="pt-menu-header"><h6>{entry.name}</h6></div>
+                        <div key={`${key}-header`} className="pt-menu-header"><h6>{menuName}</h6></div>
                     );
                 }
                 return rendered;
             }
-            case "link": {
+            case "page": {
                 const pathName = this.props.location.pathname;
                 const {
                     name,
                     path,
-                    subEntries
+                    children,
+                    navMenuCollapse
                 } = entry;
-                const primaryLink = <ActiveAwareLink key={key} exact={subEntries != null} className="pt-menu-item" to={path}>{name}</ActiveAwareLink>;
-                if (!subEntries || !matchPartialPath(pathName, path)) {
+                const primaryLink = <ActiveAwareLink key={key} exact={children != null} className="pt-menu-item" to={path}>{name}</ActiveAwareLink>;
+                if (!children || (navMenuCollapse && !matchPartialPath(pathName, path))) {
                     return primaryLink;
                 }
                 else {
                     return [
                         primaryLink,
                         <ul key={`${key}-list`}>
-                            {this._renderEntries(subEntries).map((x, i) => <li key={`${key}-${i}`}>{x}</li>)}
+                            {this._renderLinks(children).map((x, i) => <li key={`${key}-${i}`}>{x}</li>)}
                         </ul>
                     ];
                 }
             }
             default: 
-                return throwUnknownMenuEntry(entry);
+                return throwUnknownSiteGraphType(entry);
         }
     }
 }
 export default withRouter(AppNavMenu);
 
-function throwUnknownMenuEntry(entry: never): never {
-    throw new Error(`Unknown entry type "${(entry as NavMenuEntry).type}".`);
+function throwUnknownSiteGraphType(entry: never): never {
+    throw new Error(`Unknown entry type "${(entry as SiteGraphEntry).type}".`);
 }
 
 
