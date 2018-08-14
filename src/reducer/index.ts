@@ -3,16 +3,17 @@ import reduceReducers from "reduce-reducers";
 
 import { AppState } from "@/state";
 
-import behaviorsReducer from "./behaviors";
-import gameObjectReducer from "./game-object";
+import behaviorsReducer from "@/reducer/behaviors";
+import gameObjectReducer from "@/reducer/game-object";
 
-import dismissErrorReducer from "./dismiss-error";
-import modifyOniSave from "./modify-onisave";
-import parseProgressReducer from "./onisave-parse-progress";
-import receiveOniSaveReducer from "./receive-onisave";
-import selectPathReducer from "./select-path";
-import setEditModeReducer from "./set-editmode";
-import setLanguageReducer from "./set-language";
+import dismissErrorReducer from "@/reducer/dismiss-error";
+import modifyOniSave from "@/reducer/modify-onisave";
+import parseProgressReducer from "@/reducer/onisave-parse-progress";
+import toggleSettingsReducer from "@/reducer/toggle-settings";
+import receiveOniSaveReducer from "@/reducer/receive-onisave";
+import selectPathReducer from "@/reducer/select-path";
+import setEditModeReducer from "@/reducer/set-editmode";
+import setLanguageReducer from "@/reducer/set-language";
 
 const reducers: Reducer<AppState, any>[] = [
   behaviorsReducer,
@@ -20,6 +21,7 @@ const reducers: Reducer<AppState, any>[] = [
   dismissErrorReducer,
   modifyOniSave,
   parseProgressReducer,
+  toggleSettingsReducer,
   receiveOniSaveReducer,
   selectPathReducer,
   setEditModeReducer,

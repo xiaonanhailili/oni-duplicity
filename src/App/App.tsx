@@ -1,19 +1,19 @@
 import * as React from "react";
 import { connect } from "react-redux";
 
-import i18n from "@/i18n";
-
-import mapStateToProps, { StateProps } from "./derived-state";
-import mapDispatchToProps, { DispatchProps } from "./events";
+import mapStateToProps, { StateProps } from "@/App/derived-state";
+import mapDispatchToProps, { DispatchProps } from "@/App/events";
 
 import NoSave from "@/pages/NoSave";
 import ErrorPage from "@/pages/Error";
 import Loading from "@/pages/Loading";
 import SaveEditor from "@/pages/SaveEditor";
 
-import AppContainer from "./components/AppContainer";
-import AppContent from "./components/AppContent";
-import NavBarContainer from "./components/NavBar";
+import SettingsModal from "@/pages/modals/SettingsModal/SettingsModal";
+
+import AppContainer from "@/App/components/AppContainer";
+import AppContent from "@/App/components/AppContent";
+import NavBarContainer from "@/App/components/NavBar";
 
 type Props = StateProps & DispatchProps;
 class App extends React.Component<Props> {
@@ -46,6 +46,7 @@ class App extends React.Component<Props> {
       <AppContainer>
         <NavBarContainer />
         <AppContent>{element}</AppContent>
+        <SettingsModal />
       </AppContainer>
     );
   }

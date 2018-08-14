@@ -7,7 +7,7 @@ import { Trans, translate } from "react-i18next";
 
 import { isProd } from "@/runtime-env";
 
-import { Intent, FontSize } from "@/style";
+import styled, { Intent, FontSize } from "@/style";
 
 import Icon from "@/components/Icon";
 import Button from "@/components/Button";
@@ -18,14 +18,18 @@ import NavBarContainer from "./components/NavBarContainer";
 
 import NavBarGroup from "./components/NavBarGroup";
 import NavBarTitleText from "./components/NavBarTitleText";
-import SettingsButton from "./components/SettingsButton";
+
+// TODO: generic component.  Make icon clickable and able to have cursor specified?
+const ClickSpan = styled.span`
+  cursor: pointer;
+`;
 
 type Props = DispatchProps;
 class NavBar extends React.Component<Props> {
   private _input: HTMLElement | null = null;
 
   render() {
-    const { onLoadTestData } = this.props;
+    const { onLoadTestData, onSettingsClick } = this.props;
     return (
       <NavBarContainer>
         <NavBarTitleText>Duplicity</NavBarTitleText>
@@ -63,7 +67,13 @@ class NavBar extends React.Component<Props> {
               verticalAlign="middle"
             />
           </a>
-          <SettingsButton />
+          <ClickSpan title="Settings" onClick={onSettingsClick}>
+            <Icon.Settings
+              intent={Intent.Hint}
+              fontSize={FontSize.Heading}
+              verticalAlign="middle"
+            />
+          </ClickSpan>
         </NavBarGroup>
       </NavBarContainer>
     );

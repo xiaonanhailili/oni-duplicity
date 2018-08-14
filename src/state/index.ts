@@ -4,6 +4,7 @@ import { EditMode } from "@/services/save-structure";
 export type LoadingState = "idle" | "loading" | "saving" | "ready";
 
 export interface AppState {
+  isSettingsOpen: boolean;
   language: string;
   loadingState: LoadingState;
   loadingProgressMessage: string | null;
@@ -13,6 +14,7 @@ export interface AppState {
   editMode: EditMode;
 }
 export const defaultAppState: Readonly<AppState> = {
+  isSettingsOpen: false,
   language: "en",
   loadingState: "idle" as "idle",
   loadingProgressMessage: null,
